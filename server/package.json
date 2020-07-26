@@ -1,0 +1,14 @@
+{
+  "name": "graphql-fullstack-app",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "nodemon src/index.js"
+  },
+  "dependencies": {
+    "graphql-yoga": "^1.18.3",
+    "nodemon": "^2.0.4",
+    "uuid": "^8.2.0"
+  }
+}
