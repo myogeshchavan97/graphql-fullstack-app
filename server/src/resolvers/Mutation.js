@@ -1,52 +1,123 @@
-const { v4: uuidv4 } = require('uuid');
+const Product = require('../../model/Product');
+const Review = require('../../model/Review');
+const { getMessage } = require('../utils/functions');
 
 const Mutation = {
-  addUser(parent, args, ctx, info) {
-    const { name, age } = args;
-    const { users } = ctx;
+  async addProduct(parent, args, ctx, info) {
+    try {
+      const { skuId } = args;
+      const { name, description, price } = args.data;
+      let product = await Product.find({ skuId });
 
-    users.push({
-      id: uuidv4(),
-      name,
-      age
-    });
+      if (product.length > 0) {
+        throw new Error(`Message:Product with skuId ${skuId} already exist.`);
+      }
 
-    return users;
+      product = new Product({
+        skuId,
+        name,
+        description,
+        price
+      });
+
+      await product.save();
+
+      return product;
+    } catch (error) {
+      const message = error.message;
+      if (message.startsWith('Message')) {
+        throw new Error(getMessage(message));
+      } else {
+        throw new Error('Error while adding product. Try again later.');
+      }
+    }
   },
-  updateUser(parent, args, ctx, info) {
-    const { id, name, age } = args;
-    const { users, pubsub } = ctx;
+  async editProduct(parent, args, ctx, info) {
+    try {
+      const { skuId } = args;
+      const { name, description, price } = args.data;
+      let product = await Product.find({ skuId });
 
-    const user = users.find((user) => user.id === id);
+      if (product.length === 0) {
+        throw new Error(`Message:Product with skuId ${skuId} does not exist.`);
+      }
 
-    if (!user) {
-      throw new Error(`user with id ${id} does not exist.`);
+      product = await Product.findOneAndUpdate(
+        { skuId },
+        {
+          name,
+          description,
+          price
+        },
+        {
+          new: true
+        }
+      );
+
+      return product;
+    } catch (error) {
+      const message = error.message;
+      if (message.startsWith('Message')) {
+        throw new Error(getMessage(message));
+      } else {
+        throw new Error('Error while editing product. Try again later.');
+      }
     }
-
-    if (name) {
-      user.name = name;
-    }
-
-    if (age) {
-      user.age = age;
-    }
-
-    pubsub.publish('update_user', {
-      update: user
-    });
-
-    return user;
   },
-  deleteUser(parent, args, ctx, info) {
-    const { users } = ctx;
+  async deleteProduct(parent, args, ctx, info) {
+    try {
+      const { skuId } = args;
+      const product = await Product.findOneAndDelete({ skuId });
+      if (!product) {
+        throw new Error(`Message:Product with skuId ${skuId} does not exist.`);
+      }
 
-    const index = users.findIndex((user) => user.id === args.id);
-    if (index === -1) {
-      throw new Error(`User with id ${args.id} does not exist.`);
+      await Review.deleteMany({ product: product._id });
+
+      return product;
+    } catch (error) {
+      const message = error.message;
+      if (message.startsWith('Message')) {
+        throw new Error(getMessage(message));
+      } else {
+        throw new Error('Error while deleting product. Try again later.');
+      }
     }
+  },
+  async addReview(parent, args, ctx, info) {
+    try {
+      const { skuId } = args;
+      const { title, comment } = args.data;
+      const product = await Product.findOne({ skuId });
+      if (!product) {
+        throw new Error(`Message:Product with skuId ${skuId} does not exist.`);
+      }
+      const review = new Review({
+        title,
+        comment,
+        product: product._id
+      });
 
-    const deletedUser = users.splice(index, 1);
-    return deletedUser[0];
+      await review.save();
+      return review;
+    } catch (error) {
+      const message = error.message;
+      if (message.startsWith('Message')) {
+        throw new Error(getMessage(message));
+      } else {
+        throw new Error('Error while adding review. Try again later.');
+      }
+    }
+  },
+  async deleteReview(parent, args, ctx, info) {
+    const { reviewId } = args;
+
+    try {
+      await Review.findByIdAndDelete(reviewId);
+      return true;
+    } catch (error) {
+      throw new Error('Error while deleting review. Try again later.');
+    }
   }
 };
 
