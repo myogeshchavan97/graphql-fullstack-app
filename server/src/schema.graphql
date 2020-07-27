@@ -1,30 +1,43 @@
 type Query {
-  name: String!
-  age: Int!
-  isSingle: Boolean
-  numbers: [Int!]!
-  location: Location
-  users: [User!]!
+  products: [Product!]!
+  reviews(skuId: ID!): [Review!]!
 }
 
 type Mutation {
-  addUser(name: String!, age: Int!): [User!]!
-  updateUser(id: ID!, name: String, age: Int): User!
-  deleteUser(id: ID!): User!
+  addProduct(skuId: ID!, data: ProductInput): Product!
+  editProduct(skuId: ID, data: ProductInput): Product!
+  deleteProduct(skuId: ID): Product!
+  addReview(skuId: ID!, data: AddReviewInput): Review!
+  deleteReview(reviewId: ID!): Boolean!
 }
 
-type Subscription {
-  update: User!
-}
-
-type Location {
-  state: String!
-  city: String!
-}
-
-type User {
-  id: ID!
+input ProductInput {
   name: String!
-  age: Int!
-  location: Location
+  description: String!
+  price: Float!
+}
+
+input AddReviewInput {
+  title: String!
+  comment: String!
+}
+
+type Product {
+  skuId: ID!
+  name: String!
+  description: String!
+  price: Float!
+  updatedAt: String!
+}
+
+type CustomReview {
+  skuId: ID!
+  review: Review!
+}
+
+type Review {
+  _id: ID!
+  title: String!
+  comment: String!
+  updatedAt: String!
 }
