@@ -12,7 +12,8 @@ Then open first terminal and execute the following commands in sequence
 3. yarn start
 ```
 
-Then open another terminal and execute the following command
+Then open another terminal and execute the following commands in sequence
+
 ```js
 1. cd client
 2. yarn install
