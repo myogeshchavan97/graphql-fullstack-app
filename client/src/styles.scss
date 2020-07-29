@@ -1,0 +1,307 @@
+$color-red: #f21e08;
+$dark-black: #555;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  letter-spacing: 1px;
+}
+
+@mixin overflow($x: 100px) {
+  min-width: $x;
+  height: 30px;
+  overflow-y: auto;
+  text-overflow: ellipsis;
+}
+
+.errorMsg {
+  color: $color-red;
+  background: #fff0f0;
+  padding: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.successMsg {
+  color: #00ff00;
+  background: #077707;
+  padding: 0.5rem;
+  margin-top: 1rem;
+  position: relative;
+  animation: succesMsgAnimation 0s ease-in-out 2s forwards;
+}
+
+@keyframes succesMsgAnimation {
+  100% {
+    width: 0;
+    height: 0;
+    overflow: hidden;
+    visibility: hidden;
+  }
+}
+
+.loading {
+  font-weight: bold;
+  text-align: center;
+}
+
+.hide {
+  display: none;
+}
+
+.btn {
+  letter-spacing: 1px;
+}
+
+.required {
+  color: $color-red;
+}
+
+.header {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  text-transform: uppercase;
+  background: #444;
+  padding: 1rem;
+  color: #fff;
+
+  .title {
+    font-size: 200%;
+    margin-right: 2rem;
+  }
+
+  a:link,
+  a:visited {
+    text-decoration: none;
+    color: #fff;
+  }
+
+  .links {
+    a:link,
+    a:visited {
+      margin: 1rem 2rem;
+      font-size: 1.1rem;
+    }
+    a:hover,
+    a:active {
+      text-shadow: 0 0 5px #fff;
+    }
+  }
+}
+
+.layout {
+  width: 70%;
+  padding: 1rem;
+  margin: 1rem auto;
+  border: 0.3rem solid #eee;
+  border-radius: 5px;
+}
+
+.product-header {
+  background: $dark-black;
+  color: #fff;
+  cursor: none;
+}
+.product {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #eee;
+  font-size: 1.2rem;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+
+  .name {
+    flex-basis: 200px;
+  }
+  .description {
+    flex: 1;
+  }
+}
+
+.active {
+  font-weight: bold;
+}
+
+.no-result {
+  font-weight: bold;
+}
+
+.product-item {
+  position: relative;
+  .name {
+    @include overflow;
+  }
+  .description {
+    @include overflow(200px);
+  }
+  .buttons {
+    display: none;
+    position: absolute;
+    top: 0%;
+    left: 50%;
+  }
+  &:hover {
+    background: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.9),
+      rgba(0, 0, 0, 0.2)
+    );
+  }
+
+  &:hover .buttons {
+    display: block;
+  }
+}
+
+.ReactModal__Content {
+  .product-details {
+    width: 100%;
+  }
+  .close {
+    position: absolute;
+    right: 2%;
+    top: 2%;
+    cursor: pointer;
+  }
+  .heading {
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+  span {
+    display: inline-block;
+    margin-left: 0.5rem;
+  }
+}
+
+.add-review {
+  margin-top: 1rem;
+}
+
+.reviews {
+  margin: 3rem 0 1.5rem 0;
+  & > .title {
+    background: $dark-black;
+    padding: 0.5rem;
+    color: #fff;
+  }
+  .review:first-of-type {
+    margin-top: 1rem;
+  }
+  .review {
+    background: #d8d0d0;
+    padding: 0.5rem;
+    border-radius: 5px;
+    margin: 5px 0;
+    .main-section {
+      background: #b9afaf;
+      padding: 0.5rem;
+      border-radius: 5px;
+    }
+    .updated_time {
+      font-size: 0.8rem;
+      margin-bottom: 0.5rem;
+      display: flex;
+      justify-content: space-between;
+
+      .delete-review {
+        font-size: 1rem;
+
+        a:link,
+        a:visited,
+        a:hover,
+        a:active {
+          color: #211d1d;
+        }
+      }
+    }
+    .title {
+      font-weight: bold;
+      border-bottom: 1px dotted #d8d0d0;
+      padding-bottom: 1rem;
+    }
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .header {
+    flex-direction: column;
+
+    .title {
+      text-align: center;
+      font-size: 150%;
+      margin-right: 0;
+    }
+    .links {
+      display: flex;
+      flex-direction: column;
+      margin-top: 1rem;
+    }
+  }
+
+  .form-control,
+  .btn {
+    font-size: 0.8rem;
+  }
+
+  .layout {
+    width: 80%;
+  }
+
+  .product-item .buttons {
+    left: 10%;
+  }
+
+  .ReactModal__Content {
+    width: 500px !important;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .product-header {
+    font-size: 1rem;
+  }
+
+  .product .description {
+    display: none;
+  }
+
+  .ReactModal__Content {
+    width: 400px !important;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .product-header {
+    font-size: 0.8rem;
+  }
+
+  .product-item {
+    .product {
+      font-size: 1rem;
+    }
+
+    .btn {
+      padding: 0.2rem;
+    }
+  }
+
+  .ReactModal__Content {
+    width: 250px !important;
+    font-size: 0.9rem;
+  }
+
+  .reviews .review .updated_time {
+    flex-direction: column;
+
+    & > div {
+      margin: 0.5rem 0;
+    }
+  }
+}
